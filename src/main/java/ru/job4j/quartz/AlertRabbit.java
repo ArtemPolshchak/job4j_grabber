@@ -20,58 +20,45 @@ public class AlertRabbit {
 
     public static void main(String[] args) throws Exception {
 
-        try (Connection connection = getConnection()) {
-            try (Statement statement = connection.createStatement()) {
-                String sql = String.format(
-                        "create table if not exists rabbit(%s, %s);",
-                        "id serial primary key",
-                        "created_date timestamp"
-                );
-                statement.execute(sql);
-            }
-
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            scheduler.start();
-            JobDataMap data = new JobDataMap();
-            data.put("connection", connection);
-            JobDetail job = newJob(Rabbit.class)
-                    .usingJobData(data)
-                    .build();
-            SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(intervalSeconds("rabbit.properties"))
-                    .repeatForever();
-            Trigger trigger = newTrigger()
-                    .startNow()
-                    .withSchedule(times)
-                    .build();
-            scheduler.scheduleJob(job, trigger);
-            Thread.sleep(10000);
-            scheduler.shutdown();
-        }
-    }
-
-    private static Connection getConnection() throws Exception {
-        Connection connection;
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             Properties properties = new Properties();
             properties.load(in);
-            Class.forName(properties.getProperty("driver-class-name"));
-            connection = DriverManager.getConnection(properties.getProperty("url"),
-                    properties.getProperty("username"),
-                    properties.getProperty("password")
-            );
+            try (Connection connection = getConnection(properties)) {
+                try (Statement statement = connection.createStatement()) {
+                    String sql = String.format(
+                            "create table if not exists rabbit(%s, %s);",
+                            "id serial primary key",
+                            "created_date timestamp"
+                    );
+                    statement.execute(sql);
+                }
+                Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+                scheduler.start();
+                JobDataMap data = new JobDataMap();
+                data.put("connection", connection);
+                JobDetail job = newJob(Rabbit.class)
+                        .usingJobData(data)
+                        .build();
+                SimpleScheduleBuilder times = simpleSchedule()
+                        .withIntervalInSeconds(Integer.parseInt(properties.getProperty("rabbit.interval")))
+                        .repeatForever();
+                Trigger trigger = newTrigger()
+                        .startNow()
+                        .withSchedule(times)
+                        .build();
+                scheduler.scheduleJob(job, trigger);
+                Thread.sleep(10000);
+                scheduler.shutdown();
+            }
         }
-        return connection;
     }
 
-    public static int intervalSeconds(String properties) {
-        Properties config = new Properties();
-        try (InputStream io = AlertRabbit.class.getClassLoader().getResourceAsStream(properties)) {
-            config.load(io);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Integer.parseInt(config.getProperty("rabbit.interval"));
+    private static Connection getConnection(Properties properties) throws Exception {
+        Class.forName(properties.getProperty("driver-class-name"));
+        String url = properties.getProperty("url");
+        String login = properties.getProperty("username");
+        String password = properties.getProperty("password");
+        return  DriverManager.getConnection(url, login, password);
     }
 
     public static class Rabbit implements Job {
