@@ -28,10 +28,11 @@ public class HabrCareerParse {
             String vacancyName = titleElement.text();
 
             Element dateElement = row.select(".vacancy-card__date").first();
+            Element dateEl = dateElement.child(0);
             String dateText = dateElement.text();
 
-            String link = String.format("%s%s", SOURCE_LINK,
-                    linkElement.attr("href"));
+            String link = String.format("%s%s  дата - %s", SOURCE_LINK,
+                    linkElement.attr("href"), dateEl.attr("datetime"));
             System.out.printf("%s %s %s%n", vacancyName, dateText, link);
         });
     }
