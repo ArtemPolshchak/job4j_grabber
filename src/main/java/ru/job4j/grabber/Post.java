@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * @author artem.polschak@gmail.com on 07.08.2022.
+ * @author artem.polschak@gmail.com on 08.08.2022.
  * @project job4j_grabber
  */
 
@@ -16,12 +16,23 @@ public class Post {
     private String description;
     private LocalDateTime created;
 
-    public int getId() {
-        return id;
+    public Post(int id, String title, String link, String description, LocalDateTime created) {
+        this.id = id;
+        this.title = title;
+        this.link = link;
+        this.description = description;
+        this.created = created;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Post(String title, String link, String description, LocalDateTime created) {
+        this.title = title;
+        this.link = link;
+        this.description = description;
+        this.created = created;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -73,15 +84,12 @@ public class Post {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTitle(), getLink(), getCreated());
+        return Objects.hash(getId(), getLink());
     }
 
     @Override
     public String toString() {
         return "Post{" + "id=" + id
-                + ", title='" + title + '\''
-                + ", link='" + link + '\''
-                + ", description='" + description
-                + '\'' + ", created=" + created + '}';
+                + ", link='" + link + '\'';
     }
 }
