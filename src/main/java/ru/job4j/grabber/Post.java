@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * @author artem.polschak@gmail.com on 08.08.2022.
+ * @author artem.polschak@gmail.com on 09.08.2022.
  * @project job4j_grabber
  */
 
@@ -77,9 +77,7 @@ public class Post {
         }
         Post post = (Post) o;
         return getId() == post.getId()
-                && Objects.equals(getTitle(), post.getTitle())
-                && Objects.equals(getLink(), post.getLink())
-                && Objects.equals(getCreated(), post.getCreated());
+                && Objects.equals(getLink(), post.getLink());
     }
 
     @Override
