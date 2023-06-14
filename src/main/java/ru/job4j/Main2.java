@@ -1,5 +1,6 @@
-package ru.job4j.grabber;
+package ru.job4j;
 
+import com.sun.xml.bind.v2.runtime.output.StAXExStreamWriterOutput;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,12 +10,10 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 /**
- * @author artem.polschak@gmail.com on 07.08.2022.
+ * @author User on 13.07.2022.
  * @project job4j_grabber
  */
-
-public class HabrCareerParse {
-
+public class Main2 {
     private static final String SOURCE_LINK = "https://career.habr.com";
 
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
