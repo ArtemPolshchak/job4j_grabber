@@ -5,7 +5,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.IOException;
 
 /**
@@ -14,13 +13,12 @@ import java.io.IOException;
  */
 
 public class HabrCareerParse {
-
     private static final String SOURCE_LINK = "https://career.habr.com";
 
     private static final String PAGE_LINK = String.format("%s/vacancies/java_developer", SOURCE_LINK);
 
     public static void main(String[] args) throws IOException {
-        String link1 = "https://career.habr.com/vacancies/1000108079";
+       // String link1 = "https://career.habr.com/vacancies/1000108079";
         for (int countPages = 1; countPages <= 5; countPages++) {
             String pages = String.format("%s%s%s", PAGE_LINK, "?page=", countPages);
             Connection connection = Jsoup.connect(pages);
